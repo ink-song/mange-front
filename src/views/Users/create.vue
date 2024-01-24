@@ -51,7 +51,6 @@
       </el-select>
     </el-form-item>
     <el-form-item label="部门" prop="deptId">
-      {{ userForm.deptId }}
       <el-cascader
         v-model="userForm.deptId"
         placeholder="请选择所属部门"
@@ -151,7 +150,7 @@ const roleList = ref([
 ]);
 const handleClose = () => {
   clearForm();
-  router.push('/user');
+  router.push('/system/user');
 };
 
 const clearForm = () => {
@@ -166,7 +165,6 @@ const clearForm = () => {
   };
 };
 const initData = () => {
-  console.log(route);
   if (route.path.includes('edit')) {
   } else if (route.path.includes('create')) {
     clearForm();

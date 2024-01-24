@@ -152,7 +152,7 @@ const roleList = ref([
 ]);
 const handleClose = () => {
   clearForm();
-  router.push('/user');
+  router.push('/system/user');
 };
 
 const clearForm = () => {

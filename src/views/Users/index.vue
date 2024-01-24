@@ -88,7 +88,6 @@ const user = ref({
   state: 1,
 });
 const { ctx } = getCurrentInstance();
-console.log(ctx);
 const userList = ref([]);
 const selectKey = ref([]);
 const pager = ref({
