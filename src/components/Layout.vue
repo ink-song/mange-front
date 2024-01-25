@@ -41,7 +41,7 @@
 import { onMounted, ref } from 'vue';
 const isCollapse = ref(false);
 import TreeMenu from '@/components/TreeMenu.vue';
-import { getMenuList } from '@/api/index';
+import { getMenuListApi } from '@/api/menu';
 const treeMenuArray = ref([]);
 const activeMenu = ref('/welcome');
 import BreadCrumb from '@/components/BreadCrumb.vue';
@@ -51,7 +51,8 @@ const toggleCollapse = () => {
 };
 const getTreeMenu = async () => {
   try {
-    const { data } = await getMenuList();
+    const { data } = await getMenuListApi();
+    console.log('data', data);
     treeMenuArray.value = data.menuList;
   } catch (error) {
     console.log(error);

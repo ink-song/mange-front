@@ -6,7 +6,7 @@ export function operateMenuApi(data) {
     url: '/menu/operate',
     method: 'post',
     data,
-    mock: true,
+    mock: false,
   });
 }
 
@@ -16,6 +16,5 @@ export function getMenuListApi() {
   return request({
     url: '/menu/list',
     method: 'get',
-    mock: true,
   });
 }

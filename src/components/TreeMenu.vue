@@ -2,7 +2,7 @@
  * @Author: ink-song 229135518@qq.com
  * @Date: 2024-01-20 21:31:52
  * @LastEditors: ink-song 229135518@qq.com
- * @LastEditTime: 2024-01-24 17:42:11
+ * @LastEditTime: 2024-01-24 21:30:16
  * @FilePath: /manger-front/src/components/TreeMenu.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -14,8 +14,7 @@
         <i :class="menu.icon"></i>
         <span>{{ menu.menuName }}</span>
       </template>
-      <!-- <tree-menu :treeMenu="menu.children" /> -->
-      <div v-if="menu.children.length">
+      <div v-if="menu.children && menu.children.length">
         <el-menu-item
           v-for="(item, index) in menu.children"
           :key="index"
@@ -26,12 +25,6 @@
         </el-menu-item>
       </div>
     </el-sub-menu>
-    <!-- <el-menu-item
-      v-else-if="menu.menuType == 1"
-      :index="menu.path"
-      :key="menu._id"
-      >{{ menu.menuName }}</el-menu-item
-    > -->
   </div>
 </template>
 <script setup>

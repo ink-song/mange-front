@@ -217,7 +217,7 @@ const rules = ref({
   ],
 });
 const menuForm = ref({
-  parentId: [],
+  parentId: [null],
   menuType: 1,
   menuName: '',
   icon: '',
@@ -237,7 +237,7 @@ const handleReset = (formName) => {
 };
 const handleCreate = (row) => {
   menuForm.value = {
-    parentId: [],
+    parentId: [null],
     menuType: 1,
     menuName: '',
     icon: '',
@@ -259,7 +259,7 @@ const handleEdit = (row) => {
 };
 const handleClose = () => {
   menuForm.value = {
-    parentId: [],
+    parentId: [null],
     menuType: 1,
     menuName: '',
     icon: '',
@@ -280,7 +280,7 @@ const handleDel = (_id) => {
       if (action === 'confirm') {
         try {
           await operateMenuApi({
-            action: 'delele',
+            action: 'delete',
             _id,
           });
           ElMessage({
@@ -307,13 +307,13 @@ const handleSubmit = () => {
   dialogForm.value.validate(async (valid) => {
     if (valid) {
       try {
-        await operateMenuApi({
+        const { msg } = await operateMenuApi({
           ...menuForm.value,
           action: menuForm.value._id ? 'edit' : 'add',
         });
         ElMessage({
           type: 'success',
-          message: '操作成功!',
+          message: msg || '操作成功!',
         });
         handleClose();
         getMenuList();
