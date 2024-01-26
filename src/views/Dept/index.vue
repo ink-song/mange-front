@@ -2,8 +2,11 @@
   <div class="user-manage">
     <div class="query-form">
       <el-form ref="form" :inline="true" :model="queryForm">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="queryForm.roleName" placeholder="请输入角色名称" />
+        <el-form-item label="部门名称">
+          <el-input
+            placeholder="请输入部门名称"
+            v-model="queryForm.deptName"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">查询</el-button>
@@ -21,7 +24,7 @@
         >
       </div>
       <el-table
-        :data="roleList"
+        :data="deptList"
         row-key="_id"
         :tree-props="{ children: 'children' }"
       >
@@ -40,12 +43,6 @@
               >编辑</el-button
             >
             <el-button
-              size="small"
-              type="primary"
-              @click="handleOpenPermission(scope.row)"
-              >设置权限</el-button
-            >
-            <el-button
               type="danger"
               size="small"
               @click="handleDel(scope.row._id)"
@@ -54,33 +51,51 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        class="pagination"
-        background
-        layout="prev, pager, next"
-        :total="pager.total"
-        :page-size="pager.pageSize"
-        @current-change="handleCurrentChange"
-      />
     </div>
   </div>
-  <el-dialog title="角色新增" v-model="showModal">
+  <el-dialog :title="dialogTitle" v-model="showModal">
     <el-form
       ref="dialogForm"
-      :model="roleForm"
+      :model="deptForm"
       label-width="100px"
       :rules="rules"
     >
-      <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="roleForm.roleName" placeholder="请输入角色名称" />
+      <el-form-item label="上级部门" prop="parentId">
+        <el-cascader
+          placeholder="请选择上级部门"
+          v-model="deptForm.parentId"
+          :props="{ checkStrictly: true, value: '_id', label: 'deptName' }"
+          clearable
+          :options="deptList"
+          :show-all-levels="true"
+        ></el-cascader>
       </el-form-item>
-      <el-form-item label="备注" prop="remark">
+      <el-form-item label="部门名称" prop="deptName">
         <el-input
-          type="textarea"
-          :rows="2"
-          v-model="roleForm.remark"
-          placeholder="请输入备注"
-        />
+          placeholder="请输入部门名称"
+          v-model="deptForm.deptName"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="负责人" prop="user">
+        <el-select
+          placeholder="请选择部门负责人"
+          v-model="deptForm.user"
+          @change="handleUser"
+        >
+          <el-option
+            v-for="item in userList"
+            :key="item.userId"
+            :label="item.userName"
+            :value="`${item.userId}/${item.userName}/${item.userEmail}`"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="负责人邮箱" prop="userEmail">
+        <el-input
+          placeholder="请输入负责人邮箱"
+          v-model="deptForm.userEmail"
+          disabled
+        ></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -90,78 +105,46 @@
       </span>
     </template>
   </el-dialog>
-  <!-- 权限弹框-->
-  <el-dialog title="权限设置" v-model="showPermission">
-    <el-form label-width="100px">
-      <el-form-item label="角色名称">
-        {{ curRoleName }}
-      </el-form-item>
-      <el-form-item label="选择权限">
-        <el-tree
-          ref="permissionForm"
-          :data="menuList"
-          show-checkbox
-          node-key="_id"
-          default-expand-all
-          :props="{ label: 'menuName' }"
-        >
-        </el-tree>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="showPermission = false">取 消</el-button>
-        <el-button type="primary" @click="handlePermissionSubmit"
-          >确 定</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <script setup>
 import { ref, onMounted, getCurrentInstance, h } from 'vue';
-import { getRolesListApi, operateRolesApi, updateRolesApi } from '@/api/roles';
-import { getMenuListApi } from '@/api/menu';
+import { getDeptListApi, operateDeptApi } from '@/api/dept';
+import { getAllUserApi } from '@/api/index';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import monment from 'moment';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const queryForm = ref({
-  roleName: '',
+  deptName: '',
 });
+const userList = ref([]);
+const dialogTitle = ref('部门新增');
 const pager = ref({
   total: 0,
   pageSize: 10,
   pageNum: 1,
 });
-const roleForm = ref({
-  roleName: '',
-  remark: '',
+const deptForm = ref({
+  deptName: '',
+  parentId: [null],
+  user: '',
+  userEmail: '',
+  userName: '',
 });
 const menuList = ref([]);
 const dialogForm = ref(null);
 const { ctx } = getCurrentInstance();
-const roleList = ref([]);
+const deptList = ref([]);
 const showModal = ref(false);
-const curRoleName = ref('');
-const showPermission = ref(false);
 const columns = [
   {
-    label: '角色名称',
-    prop: 'roleName',
+    label: '部门名称',
+    prop: 'deptName',
   },
   {
-    label: '备注',
-    prop: 'remark',
-  },
-  {
-    label: '权限列表',
-    prop: 'permissionList',
-    width: 200,
-    formatter: (row, column, value) => {
-      return treeMenu(menuList.value, value);
-    },
+    label: '负责人',
+    prop: 'userName',
   },
   {
     label: '更新时间',
@@ -180,51 +163,71 @@ const columns = [
 ];
 const permissionForm = ref(null);
 const rules = ref({
-  roleName: [
+  parentId: [
     {
       required: true,
-      message: '请输入角色角色名称',
+      message: '请选择上级部门',
+      trigger: 'blur',
+    },
+  ],
+  deptName: [
+    {
+      required: true,
+      message: '请输入部门名称',
+      trigger: 'blur',
+    },
+  ],
+  user: [
+    {
+      required: true,
+      message: '请选择负责人',
+      trigger: 'blur',
     },
   ],
 });
 
 const handleCurrentChange = (val) => {
   pager.value.pageNum = val;
-  getRolesList();
+  getDeptList();
 };
 
 const handleQuery = () => {
-  getRolesList();
+  getDeptList();
 };
 
-const treeMenu = (tree, data) => {
-  // console.log(data, '=>', menuList.value);
-  // TODO:递归遍历
-};
 const handleReset = (formName) => {
-  queryForm.value = {
-    menuState: 1,
-  };
-  getRolesList();
+  clearForm();
+  getDeptList();
 };
 
 const clearForm = () => {
-  roleForm.value = {
-    roleName: '',
-    remark: '',
+  deptForm.value = {
+    deptName: '',
+    parentId: [null],
   };
 };
 const handleCreate = (row) => {
   clearForm();
+  dialogTitle.value = '部门新增';
   showModal.value = true;
 };
 const handleEdit = (row) => {
-  roleForm.value = row;
+  console.log(row, 'row');
+  dialogTitle.value = '部门编辑';
+  deptForm.value = row;
+  deptForm.value.user = `${row.userId}/${row.userName}/${row.userEmail}`;
   showModal.value = true;
 };
 const handleClose = () => {
   clearForm();
   showModal.value = false;
+};
+
+const handleUser = (val) => {
+  const [userId, userName, userEmail] = val.split('/');
+  deptForm.value.userId = userId;
+  deptForm.value.userEmail = userEmail;
+  deptForm.value.userName = userName;
 };
 const handleDel = (_id) => {
   ElMessageBox.confirm(h('p', null, '确认删除该菜单吗?'), '提示', {
@@ -235,7 +238,7 @@ const handleDel = (_id) => {
     .then(async (action) => {
       if (action === 'confirm') {
         try {
-          await operateRolesApi({
+          await operateDeptApi({
             action: 'delete',
             _id,
           });
@@ -243,7 +246,7 @@ const handleDel = (_id) => {
             type: 'success',
             message: '删除成功!',
           });
-          getRolesList();
+          getDeptList();
         } catch (error) {}
       } else {
         ElMessage({
@@ -260,44 +263,20 @@ const handleDel = (_id) => {
     });
 };
 
-const handlePermissionSubmit = async () => {
-  const checkedKeys = permissionForm.value.getCheckedKeys();
-  const halfCheckedKeys = permissionForm.value.getHalfCheckedKeys();
-  const permissionList = {
-    checkedKeys,
-    halfCheckedKeys,
-  };
-  const _id = roleList.value.find((i) => i.roleName === curRoleName.value)._id;
-  await updateRolesApi({
-    _id,
-    permissionList,
-  })
-    .then((res) => {
-      ElMessage({
-        type: 'success',
-        message: '操作成功!',
-      });
-      showPermission.value = false;
-      getRolesList();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
 const handleSubmit = () => {
   dialogForm.value.validate(async (valid) => {
     if (valid) {
       try {
-        const { msg } = await operateRolesApi({
-          ...roleForm.value,
-          action: roleForm.value._id ? 'edit' : 'add',
+        const { msg } = await operateDeptApi({
+          ...deptForm.value,
+          action: deptForm.value._id ? 'edit' : 'add',
         });
         ElMessage({
           type: 'success',
           message: msg || '操作成功!',
         });
         handleClose();
-        getRolesList();
+        getDeptList();
       } catch (error) {}
     } else {
       return false;
@@ -305,23 +284,12 @@ const handleSubmit = () => {
   });
 };
 
-const handleOpenPermission = (row) => {
-  curRoleName.value = row.roleName;
-  showPermission.value = true;
-  const { checkedKeys } = row.permissionList;
-  setTimeout(() => {
-    permissionForm.value.setCheckedKeys(checkedKeys);
-  });
-};
-const getRolesList = async () => {
+const getDeptList = async () => {
   try {
-    const { data } = await getRolesListApi({
+    const { data } = await getDeptListApi({
       ...queryForm.value,
-      ...pager.value,
     });
-    console.log(data, 'data');
-    roleList.value = data.list;
-    pager.value.total = data.page.total;
+    deptList.value = data;
   } catch (error) {
     console.log(error);
   }
@@ -335,8 +303,18 @@ const getMenuList = async () => {
   }
 };
 
+const getAllUserList = async () => {
+  try {
+    const { data } = await getAllUserApi();
+    userList.value = data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 onMounted(() => {
-  getRolesList();
+  getDeptList();
   getMenuList();
+  getAllUserList();
 });
 </script>

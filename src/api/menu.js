@@ -15,6 +15,5 @@ export function getMenuListApi() {
   return request({
     url: '/menu/list',
     method: 'get',
-    mock: true,
   });
 }

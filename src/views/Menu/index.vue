@@ -62,7 +62,7 @@
       </el-table>
     </div>
   </div>
-  <el-dialog title="菜单新增" v-model="showModal">
+  <el-dialog :title="dialogTitle" v-model="showModal">
     <el-form
       ref="dialogForm"
       :model="menuForm"
@@ -201,6 +201,7 @@ const columns = [
     },
   },
 ];
+const dialogTitle = ref('菜单新增');
 const rules = ref({
   menuName: [
     {
@@ -227,15 +228,16 @@ const menuForm = ref({
   menuState: 1,
 });
 const handleQuery = () => {
-  getUserList();
+  getMenuList();
 };
 const handleReset = (formName) => {
   queryForm.value = {
     menuState: 1,
   };
-  getUserList();
+  getMenuList();
 };
 const handleCreate = (row) => {
+  dialogTitle.value = '菜单新增';
   menuForm.value = {
     parentId: [null],
     menuType: 1,
@@ -252,6 +254,7 @@ const handleCreate = (row) => {
   showModal.value = true;
 };
 const handleEdit = (row) => {
+  dialogTitle.value = '菜单编辑';
   menuForm.value = row;
   menuForm.value.menuState = Number(row.menuState);
   menuForm.value.menuType = Number(row.menuType);

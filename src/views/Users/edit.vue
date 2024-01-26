@@ -73,6 +73,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { operateUserApi } from '@/api/index';
 import { ElMessage } from 'element-plus';
 import { getAllRolesApi } from '@/api/roles';
+import { getDeptListApi } from '@/api/dept';
 
 const router = useRouter();
 const route = useRoute();
@@ -112,36 +113,7 @@ const rules = ref({
   ],
 });
 const dialogForm = ref(null);
-const deptList = ref([
-  {
-    _id: 1,
-    deptName: '技术部',
-    children: [
-      {
-        _id: 11,
-        deptName: '前端',
-      },
-      {
-        _id: 12,
-        deptName: '后端',
-      },
-    ],
-  },
-  {
-    _id: 2,
-    deptName: '产品部',
-    children: [
-      {
-        _id: 21,
-        deptName: '产品经理',
-      },
-      {
-        _id: 22,
-        deptName: '产品运营',
-      },
-    ],
-  },
-]);
+const deptList = ref([]);
 const roleList = ref([]);
 
 const handleClose = () => {
@@ -163,7 +135,15 @@ const clearForm = () => {
   userForm.value = data;
 };
 clearForm();
-
+const getDeptList = async () => {
+  try {
+    const { data } = await getDeptListApi();
+    deptList.value = data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+getDeptList();
 const handleSubmit = () => {
   dialogForm.value.validate(async (valid) => {
     if (valid) {

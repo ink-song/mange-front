@@ -64,7 +64,7 @@
       />
     </div>
   </div>
-  <el-dialog title="角色新增" v-model="showModal">
+  <el-dialog :title="dialogTitle" v-model="showModal">
     <el-form
       ref="dialogForm"
       :model="roleForm"
@@ -139,6 +139,7 @@ const roleForm = ref({
   roleName: '',
   remark: '',
 });
+const dialogTitle = ref('');
 const menuList = ref([]);
 const dialogForm = ref(null);
 const { ctx } = getCurrentInstance();
@@ -215,10 +216,12 @@ const clearForm = () => {
   };
 };
 const handleCreate = (row) => {
+  dialogTitle.value = '角色新增';
   clearForm();
   showModal.value = true;
 };
 const handleEdit = (row) => {
+  dialogTitle.value = '角色编辑';
   roleForm.value = row;
   showModal.value = true;
 };
@@ -227,7 +230,7 @@ const handleClose = () => {
   showModal.value = false;
 };
 const handleDel = (_id) => {
-  ElMessageBox.confirm(h('p', null, '确认删除该菜单吗?'), '提示', {
+  ElMessageBox.confirm(h('p', null, '确认删除该角色吗?'), '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
@@ -319,7 +322,6 @@ const getRolesList = async () => {
       ...queryForm.value,
       ...pager.value,
     });
-    console.log(data, 'data');
     roleList.value = data.list;
     pager.value.total = data.page.total;
   } catch (error) {
