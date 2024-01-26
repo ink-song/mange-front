@@ -72,6 +72,8 @@ import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { operateUserApi } from '@/api/index';
 import { ElMessage } from 'element-plus';
+import { getAllRolesApi } from '@/api/roles';
+
 const router = useRouter();
 const route = useRoute();
 const userForm = ref({
@@ -140,21 +142,22 @@ const deptList = ref([
     ],
   },
 ]);
-const roleList = ref([
-  {
-    _id: 1,
-    roleName: '管理员',
-  },
-  {
-    _id: 2,
-    roleName: '普通用户',
-  },
-]);
+const roleList = ref([]);
+
 const handleClose = () => {
   clearForm();
   router.push('/system/user');
 };
+const getRoleList = async () => {
+  try {
+    const { data } = await getAllRolesApi();
+    roleList.value = data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
+getRoleList();
 const clearForm = () => {
   const data = route.query?.row ? JSON.parse(route.query.row) : {};
   userForm.value = data;

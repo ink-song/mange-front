@@ -287,7 +287,7 @@ const handleDel = (_id) => {
             type: 'success',
             message: '删除成功!',
           });
-          getUserList();
+          getMenuList();
         } catch (error) {}
       } else {
         ElMessage({

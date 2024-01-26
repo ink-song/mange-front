@@ -241,18 +241,17 @@ const handleSelectionChange = (val) => {
   selectKey.value = val;
 };
 const handleCurrentChange = (val) => {
-  pager.value.currentPage = val;
+  pager.value.pageNum = val;
   getUserList();
 };
 const getUserList = async () => {
   try {
     const { data } = await getUserListApi({
       ...user.value,
-      page: pager.value.currentPage,
-      limit: pager.value.pageSize,
+      ...pager.value,
     });
     userList.value = data.list;
-    pager.value.total = data.total;
+    pager.value.total = data.page.total;
   } catch (error) {
     console.log(error);
   }

@@ -71,6 +71,7 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { operateUserApi } from '@/api/index';
+import { getAllRolesApi } from '@/api/roles';
 import { ElMessage } from 'element-plus';
 const router = useRouter();
 const route = useRoute();
@@ -138,16 +139,7 @@ const deptList = ref([
     ],
   },
 ]);
-const roleList = ref([
-  {
-    _id: 1,
-    roleName: '管理员',
-  },
-  {
-    _id: 2,
-    roleName: '普通用户',
-  },
-]);
+const roleList = ref([]);
 const handleClose = () => {
   clearForm();
   router.push('/system/user');
@@ -165,6 +157,8 @@ const clearForm = () => {
   };
 };
 const initData = () => {
+  getDeptList();
+  getRoleList();
   if (route.path.includes('edit')) {
   } else if (route.path.includes('create')) {
     clearForm();
@@ -172,8 +166,14 @@ const initData = () => {
 };
 
 const getDeptList = () => {};
-
-getDeptList();
+const getRoleList = async () => {
+  try {
+    const { data } = await getAllRolesApi();
+    roleList.value = data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 initData();
 

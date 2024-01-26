@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 
-// 操作菜单
+// 新增/编辑/删除菜单
 export function operateMenuApi(data) {
   return request({
     url: '/menu/operate',
@@ -11,10 +11,10 @@ export function operateMenuApi(data) {
 }
 
 // 获取菜单所有列表
-
 export function getMenuListApi() {
   return request({
     url: '/menu/list',
     method: 'get',
+    mock: true,
   });
 }
