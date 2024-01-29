@@ -19,7 +19,7 @@
         <el-button
           type="primary"
           @click="handleCreate('')"
-          v-has="'user-create'"
+          v-permission="'dept-create'"
           >新增</el-button
         >
       </div>
@@ -39,12 +39,16 @@
         </el-table-column>
         <el-table-column label="操作" width="260">
           <template #default="scope">
-            <el-button size="small" @click="handleEdit(scope.row)"
+            <el-button
+              size="small"
+              @click="handleEdit(scope.row)"
+              v-permission="'dept-edit'"
               >编辑</el-button
             >
             <el-button
               type="danger"
               size="small"
+              v-permission="'dept-delete'"
               @click="handleDel(scope.row._id)"
               >删除</el-button
             >
@@ -112,6 +116,7 @@ import { ref, onMounted, getCurrentInstance, h } from 'vue';
 import { getDeptListApi, operateDeptApi } from '@/api/dept';
 import { getAllUserApi } from '@/api/index';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { getMenuListApi } from '@/api/menu';
 import monment from 'moment';
 import { useRouter } from 'vue-router';
 const router = useRouter();

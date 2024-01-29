@@ -16,7 +16,7 @@
         <el-button
           type="primary"
           @click="handleCreate('')"
-          v-has="'user-create'"
+          v-permission="'role-create'"
           >新增</el-button
         >
       </div>
@@ -36,18 +36,23 @@
         </el-table-column>
         <el-table-column label="操作" width="260">
           <template #default="scope">
-            <el-button size="small" @click="handleEdit(scope.row)"
+            <el-button
+              size="small"
+              @click="handleEdit(scope.row)"
+              v-permission="'role-edit'"
               >编辑</el-button
             >
             <el-button
               size="small"
               type="primary"
+              v-permission="'role-permission'"
               @click="handleOpenPermission(scope.row)"
               >设置权限</el-button
             >
             <el-button
               type="danger"
               size="small"
+              v-permission="'role-delete'"
               @click="handleDel(scope.row._id)"
               >删除</el-button
             >
@@ -199,8 +204,30 @@ const handleQuery = () => {
 };
 
 const treeMenu = (tree, data) => {
-  // console.log(data, '=>', menuList.value);
-  // TODO:递归遍历
+  const roleKeysList = [...data.checkedKeys, ...data.halfCheckedKeys];
+  let treeList = [];
+  roleKeysList.forEach((i) => {
+    const data = findKey(tree, i)?.menuName;
+    if (data) {
+      treeList.push(data);
+    }
+  });
+  return treeList.join('/');
+};
+
+const findKey = (tree, key) => {
+  for (const item of tree) {
+    if (item.parentId[item.parentId.length - 1] === key || item._id === key) {
+      return item;
+    }
+    if (item.children) {
+      const found = findKey(item.children, key);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return null;
 };
 const handleReset = (formName) => {
   queryForm.value = {

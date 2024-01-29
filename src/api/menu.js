@@ -17,3 +17,11 @@ export function getMenuListApi() {
     method: 'get',
   });
 }
+
+// 获取菜单权限树
+export function getPermissionTreeApi() {
+  return request({
+    url: '/users/getPermissionList',
+    method: 'get',
+  });
+}

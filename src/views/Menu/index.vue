@@ -22,7 +22,7 @@
         <el-button
           type="primary"
           @click="handleCreate('')"
-          v-has="'user-create'"
+          v-permission="'menu-create'"
           >新增</el-button
         >
       </div>
@@ -46,14 +46,19 @@
               @click="handleCreate(scope.row)"
               type="primary"
               size="small"
+              v-permission="'menu-create'"
               >新增</el-button
             >
-            <el-button @click="handleEdit(scope.row)" size="small"
+            <el-button
+              @click="handleEdit(scope.row)"
+              size="small"
+              v-permission="'menu-edit'"
               >编辑</el-button
             >
             <el-button
               type="danger"
               size="small"
+              v-permission="'menu-delete'"
               @click="handleDel(scope.row._id)"
               >删除</el-button
             >

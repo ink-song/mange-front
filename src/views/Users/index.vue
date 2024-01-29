@@ -24,13 +24,16 @@
     </div>
     <div class="base-table">
       <div class="action">
-        <el-button type="primary" @click="handleCreate" v-has="'user-create'"
+        <el-button
+          type="primary"
+          v-permission="'user-create'"
+          @click="handleCreate"
           >新增</el-button
         >
         <el-button
           type="danger"
           @click="handlePatchDel"
-          v-has="'user-patch-delete'"
+          v-permission="'user-patch-delete'"
           >批量删除</el-button
         >
       </div>
@@ -50,14 +53,14 @@
             <el-button
               @click="handleEdit(scope.row)"
               size="small"
-              v-has="'user-edit'"
+              v-permission="'user-edit'"
               >编辑</el-button
             >
             <el-button
               type="danger"
               size="small"
               @click="handleDel(scope.row)"
-              v-has="'user-delete'"
+              v-permission="'user-delete'"
               >删除</el-button
             >
           </template>

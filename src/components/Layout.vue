@@ -4,7 +4,7 @@
       <!-- 系统LOGO -->
       <div class="logo">
         <img src="../assets/images/logo.png" />
-        <span>Manager</span>
+        <span>球队管理系统</span>
       </div>
       <!-- 导航菜单 -->
       <el-menu
@@ -13,6 +13,7 @@
         text-color="#fff"
         router
         class="nav-menu"
+        :default-active="activeMenu"
         :collapse="isCollapse"
       >
         <tree-menu :treeMenu="treeMenuArray" />
@@ -28,7 +29,21 @@
             <BreadCrumb />
           </div>
         </div>
-        <div class="user-info"></div>
+        <div class="user-info">
+          <el-dropdown split-button trigger="click" @command="handleLogout">
+            <span class="user-link">
+              {{ userInfo.userName }}
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <!-- <el-dropdown-item command="email"
+                  >邮箱：{{ userInfo.userEmail }}</el-dropdown-item
+                > -->
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
       </div>
       <div class="wrapper">
         <router-view></router-view>
@@ -38,25 +53,39 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 const isCollapse = ref(false);
 import TreeMenu from '@/components/TreeMenu.vue';
-import { getMenuListApi } from '@/api/menu';
+import { getPermissionTreeApi } from '@/api/menu';
 const treeMenuArray = ref([]);
 const activeMenu = ref('/welcome');
 import BreadCrumb from '@/components/BreadCrumb.vue';
-
+import { useStore } from 'vuex';
+import router from '@/router';
+const store = useStore();
+const userInfo = computed(() => {
+  return store.state.userInfo.userInfo;
+});
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value;
 };
 const getTreeMenu = async () => {
   try {
-    const { data } = await getMenuListApi();
-    console.log('data', data);
+    const { data } = await getPermissionTreeApi();
     treeMenuArray.value = data.menuList;
+    store.dispatch('SET_PERMISSION_LIST', data.menuList);
+    store.dispatch('SET_ACTIONS_LIST', data.actionList);
   } catch (error) {
     console.log(error);
   }
+};
+
+const handleLogout = (value) => {
+  if (value === 'logout') {
+    store.dispatch('LOGOUT');
+    router.push('/login');
+  }
+  console.log('value', value);
 };
 
 onMounted(() => {
@@ -123,6 +152,8 @@ onMounted(() => {
         }
       }
       .user-info {
+        display: flex;
+        align-items: center;
         .notice {
           line-height: 30px;
           margin-right: 15px;
@@ -130,7 +161,7 @@ onMounted(() => {
         }
         .user-link {
           cursor: pointer;
-          color: #409eff;
+          // color: #409eff;
         }
       }
     }
