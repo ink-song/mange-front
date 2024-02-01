@@ -2,7 +2,7 @@
  * @Author: ink-song 229135518@qq.com
  * @Date: 2024-01-20 00:01:59
  * @LastEditors: ink-song 229135518@qq.com
- * @LastEditTime: 2024-01-26 10:29:50
+ * @LastEditTime: 2024-02-01 12:39:04
  * @FilePath: /manger-front/src/router/modules/custom.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  */
@@ -24,14 +24,14 @@ export default [
           title: '欢迎',
         },
       },
-      {
-        path: '/system/user',
-        name: 'user',
-        component: () => import('@/views/Users/index.vue'),
-        meta: {
-          title: '用户',
-        },
-      },
+      // {
+      //   path: '/system/user',
+      //   name: 'user',
+      //   component: () => import('@/views/Users/index.vue'),
+      //   meta: {
+      //     title: '用户',
+      //   },
+      // },
       {
         path: '/user/create',
         name: 'userCreate',

@@ -2,7 +2,7 @@
  * @Author: ink-song 229135518@qq.com
  * @Date: 2024-01-18 11:04:02
  * @LastEditors: ink-song 229135518@qq.com
- * @LastEditTime: 2024-01-22 21:59:00
+ * @LastEditTime: 2024-02-01 11:14:39
  * @FilePath: /manage-fe/src/views/common/login.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -36,36 +36,38 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { userLogin } from "@/api/login";
-import { useStore } from "vuex";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { userLogin } from '@/api/login';
+import { useStore } from 'vuex';
+import { getStorage } from '@/utils/storage';
+import tools from '@/utils/tools';
 const store = useStore();
 const router = useRouter();
 const form = ref({
-  userName: "",
-  userPwd: "",
+  userName: '',
+  userPwd: '',
 });
 
 const userForm = ref(null);
 
 const rules = {
   userName: [
-    { required: true, message: "请输入用户名", trigger: "blur" },
+    { required: true, message: '请输入用户名', trigger: 'blur' },
     {
       min: 3,
       max: 10,
-      message: "长度在 3 到 10 个字符",
-      trigger: "blur",
+      message: '长度在 3 到 10 个字符',
+      trigger: 'blur',
     },
   ],
   userPwd: [
-    { required: true, message: "请输入密码", trigger: "blur" },
+    { required: true, message: '请输入密码', trigger: 'blur' },
     {
       min: 6,
       max: 20,
-      message: "长度在 6 到 20 个字符",
-      trigger: "blur",
+      message: '长度在 6 到 20 个字符',
+      trigger: 'blur',
     },
   ],
 };
@@ -79,8 +81,8 @@ const login = () => {
     try {
       const { data } = await userLogin(form.value);
       // 校验通过
-      store.commit("setUserInfo", data);
-      router.push("/welcome");
+      store.dispatch('SET_USER_INFO', data);
+      router.push('/welcome');
     } catch (error) {}
   });
 };

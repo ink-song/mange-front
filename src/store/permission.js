@@ -1,5 +1,7 @@
 import { getStorage, setStorage } from '@/utils/storage';
 
+import { getPermissionTreeApi } from '@/api/menu';
+
 export default {
   stsate: () => ({
     permissionList: getStorage('permissionList') || [],
@@ -16,11 +18,21 @@ export default {
     },
   },
   actions: {
-    SET_PERMISSION_LIST({ commit }, permissionList) {
-      commit('setPermissionList', permissionList);
+    async SET_PERMISSION_LIST({ commit }) {
+      try {
+        const { data } = await getPermissionTreeApi();
+        commit('setPermissionList', data.menuList);
+      } catch (error) {}
     },
-    SET_ACTIONS_LIST({ commit }, actionsList) {
-      commit('setActionsList', actionsList);
+    async SET_ACTIONS_LIST({ commit }) {
+      try {
+        const { data } = await getPermissionTreeApi();
+        commit('setActionsList', data.actionList);
+      } catch (error) {}
     },
+  },
+  getters: {
+    permissionList: (state) => state.permissionList,
+    actionsList: (state) => state.actionsList,
   },
 };

@@ -30,6 +30,13 @@
           </div>
         </div>
         <div class="user-info">
+          <el-badge
+            :is-dot="noticeCount > 0 ? true : false"
+            class="notice"
+            type="danger"
+          >
+            <el-icon><Promotion /></el-icon>
+          </el-badge>
           <el-dropdown split-button trigger="click" @command="handleLogout">
             <span class="user-link">
               {{ userInfo.userName }}
@@ -56,7 +63,6 @@
 import { computed, onMounted, ref } from 'vue';
 const isCollapse = ref(false);
 import TreeMenu from '@/components/TreeMenu.vue';
-import { getPermissionTreeApi } from '@/api/menu';
 const treeMenuArray = ref([]);
 const activeMenu = ref('/welcome');
 import BreadCrumb from '@/components/BreadCrumb.vue';
@@ -69,23 +75,16 @@ const userInfo = computed(() => {
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value;
 };
-const getTreeMenu = async () => {
-  try {
-    const { data } = await getPermissionTreeApi();
-    treeMenuArray.value = data.menuList;
-    store.dispatch('SET_PERMISSION_LIST', data.menuList);
-    store.dispatch('SET_ACTIONS_LIST', data.actionList);
-  } catch (error) {
-    console.log(error);
-  }
-};
+const noticeCount = ref(0);
 
 const handleLogout = (value) => {
   if (value === 'logout') {
     store.dispatch('LOGOUT');
     router.push('/login');
   }
-  console.log('value', value);
+};
+const getTreeMenu = () => {
+  treeMenuArray.value = store.getters.permissionList;
 };
 
 onMounted(() => {
