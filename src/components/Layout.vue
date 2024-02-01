@@ -77,6 +77,8 @@ const toggleCollapse = () => {
 };
 const noticeCount = ref(0);
 
+activeMenu.value = router.currentRoute.value.path;
+
 const handleLogout = (value) => {
   if (value === 'logout') {
     store.dispatch('LOGOUT');

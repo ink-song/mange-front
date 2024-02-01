@@ -22,11 +22,9 @@ router.beforeEach(async (to, from, next) => {
       // 3.判断是否有用户信息
       if (store.getters.userInfo) {
         // 动态添加路由
-        // const permissionList = getStorage('permissionList') || [];
         await store.dispatch('SET_PERMISSION_LIST');
         await store.dispatch('SET_ACTIONS_LIST');
         const permissionList = store.getters.permissionList || [];
-        console.log('permissionList', permissionList);
         if (permissionList.length && hasRoles) {
           const list = tools.generateRoutes(permissionList);
           list.forEach((item) => {
@@ -35,6 +33,14 @@ router.beforeEach(async (to, from, next) => {
               item.component = () => import(`@/views${url}.vue`);
               router.addRoute('home', item);
             }
+          });
+          router.addRoute({
+            path: '/:pathMatch(.*)*',
+            name: '404',
+            component: () => import('@/views/common/Error_404.vue'),
+            meta: {
+              title: '404',
+            },
           });
         }
         if (hasRoles) {
@@ -64,5 +70,4 @@ router.beforeEach(async (to, from, next) => {
       next(to.path === '/login' ? undefined : '/login');
     }
   }
-  console.log('list', router.getRoutes());
 });
