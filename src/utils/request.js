@@ -2,7 +2,7 @@
  * @Author: ink-song 229135518@qq.com
  * @Date: 2024-01-18 14:50:59
  * @LastEditors: ink-song 229135518@qq.com
- * @LastEditTime: 2024-02-01 11:46:36
+ * @LastEditTime: 2024-02-02 12:17:51
  * @FilePath: /manage-fe/src/utils/request.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,6 +12,7 @@ import { ElMessage } from 'element-plus';
 import config from '@/config/index';
 import { getStorage } from './storage';
 import router from '../router';
+import store from '../store';
 const service = axios.create({
   baseURL: config.baseApi,
   timeout: 80000,
@@ -40,6 +41,7 @@ service.interceptors.response.use(
     } else if (data.code === 50001) {
       ElMessage.error(TOKEN_INVALID);
       setTimeout(() => {
+        store.dispatch('LOGOUT');
         router.push('/login');
       }, 1500);
       return Promise.reject(TOKEN_INVALID);
