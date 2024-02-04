@@ -115,6 +115,7 @@ const columns = ref([
     label: '用户角色',
     prop: 'role',
     formatter(row, column, value) {
+      console.log('value', value);
       return {
         0: '管理员',
         1: '普通用户',

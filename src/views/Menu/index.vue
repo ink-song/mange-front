@@ -146,8 +146,8 @@ import { ref, onMounted, getCurrentInstance, h } from 'vue';
 import { operateMenuApi, getMenuListApi } from '@/api/menu';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import monment from 'moment';
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { useStore } from 'vuex';
+const store = useStore();
 const queryForm = ref({
   menuState: 1,
 });
@@ -207,6 +207,7 @@ const columns = [
   },
 ];
 const dialogTitle = ref('菜单新增');
+
 const rules = ref({
   menuName: [
     {
@@ -337,6 +338,8 @@ const getMenuList = async () => {
       ...queryForm.value,
     });
     menuList.value = data.menuList;
+    await store.dispatch('SET_PERMISSION_LIST');
+    await store.dispatch('SET_ACTIONS_LIST');
   } catch (error) {
     console.log(error);
   }

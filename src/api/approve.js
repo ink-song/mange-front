@@ -2,19 +2,27 @@ import request from '@/utils/request';
 
 export function getApproveListApi(data) {
   return request({
-    url: '/approve/list',
+    url: '/leave/list',
     method: 'get',
     data,
-    mock: true,
   });
 }
 
-// 操作
+// 作废和新增
 export function operateApproveApi(data) {
   return request({
     url: '/leave/operate',
     method: 'post',
     data,
-    mock: true,
+  });
+}
+
+// 驳回和通过
+
+export function leaveApproveApi(data) {
+  return request({
+    url: '/leave/approve',
+    method: 'post',
+    data,
   });
 }

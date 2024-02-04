@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 const isCollapse = ref(false);
 import TreeMenu from '@/components/TreeMenu.vue';
 const treeMenuArray = ref([]);
@@ -92,6 +92,13 @@ const getTreeMenu = () => {
 onMounted(() => {
   getTreeMenu();
 });
+
+watch(
+  () => store.getters.permissionList,
+  (newVal) => {
+    getTreeMenu();
+  },
+);
 </script>
 
 <style lang="scss">

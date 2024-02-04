@@ -38,12 +38,13 @@
         </el-table-column>
         <el-table-column label="操作" width="220">
           <template #default="scope">
-            <el-button size="mini" @click="handleDetail(scope.row)"
+            <el-button size="small" @click="handleDetail(scope.row)"
               >查看</el-button
             >
             <el-button
+              v-if="[1, 2].includes(scope.row.applyState)"
               type="danger"
-              size="mini"
+              size="small"
               @click="handleDelete(scope.row._id)"
               >作废</el-button
             >
@@ -164,7 +165,7 @@ import monment from 'moment';
 import { ElMessage, ElMessageBox } from 'element-plus';
 const showDetailModal = ref(false);
 const queryForm = ref({
-  applyState: '',
+  applyState: 1,
 });
 
 const detail = ref({});
@@ -306,7 +307,7 @@ const columns = ref([
 const pager = ref({
   total: 0,
   pageSize: 10,
-  currentPage: 1,
+  pageNum: 1,
 });
 
 const handleReset = (formName) => {
@@ -416,7 +417,7 @@ const handleDelete = async (_id) => {
             type: 'success',
             message: '删除成功!',
           });
-          getRolesList();
+          handleQuery();
         } catch (error) {}
       } else {
         ElMessage({
@@ -432,6 +433,4 @@ const handleDelete = async (_id) => {
       });
     });
 };
-
-const handleApprove = () => {};
 </script>

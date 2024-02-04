@@ -130,8 +130,8 @@ import { getRolesListApi, operateRolesApi, updateRolesApi } from '@/api/roles';
 import { getMenuListApi } from '@/api/menu';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import monment from 'moment';
-import { useRouter } from 'vue-router';
-const router = useRouter();
+import { useStore } from 'vuex';
+const store = useStore();
 const queryForm = ref({
   roleName: '',
 });
@@ -351,6 +351,8 @@ const getRolesList = async () => {
     });
     roleList.value = data.list;
     pager.value.total = data.page.total;
+    await store.dispatch('SET_PERMISSION_LIST');
+    await store.dispatch('SET_ACTIONS_LIST');
   } catch (error) {
     console.log(error);
   }
