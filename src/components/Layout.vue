@@ -34,6 +34,7 @@
             :is-dot="noticeCount > 0 ? true : false"
             class="notice"
             type="danger"
+            @click="toApprove"
           >
             <el-icon><Promotion /></el-icon>
           </el-badge>
@@ -68,14 +69,21 @@ const activeMenu = ref('/welcome');
 import BreadCrumb from '@/components/BreadCrumb.vue';
 import { useStore } from 'vuex';
 import router from '@/router';
+
 const store = useStore();
+const noticeCount = computed(() => {
+  return store.getters.noticeCount;
+});
 const userInfo = computed(() => {
-  return store.state.userInfo.userInfo;
+  return store.getters.userInfo;
 });
 const toggleCollapse = () => {
   isCollapse.value = !isCollapse.value;
 };
-const noticeCount = ref(0);
+
+const toApprove = () => {
+  router.push('/approve/pendding');
+};
 
 activeMenu.value = router.currentRoute.value.path;
 
@@ -92,6 +100,12 @@ const getTreeMenu = () => {
 onMounted(() => {
   getTreeMenu();
 });
+
+const getNoticeCount = () => {
+  store.dispatch('SET_NOTICE_COUNT');
+};
+
+getNoticeCount();
 
 watch(
   () => store.getters.permissionList,

@@ -3,7 +3,7 @@ import { getStorage, setStorage } from '@/utils/storage';
 import { getPermissionTreeApi } from '@/api/menu';
 
 export default {
-  stsate: () => ({
+  state: () => ({
     permissionList: getStorage('permissionList') || [],
     actionsList: getStorage('actionsList') || [],
   }),

@@ -285,6 +285,7 @@ const handleDetail = (row) => {
 getTableList();
 
 const handleClose = () => {
+  showDetailModal.value = false;
   clearForm();
 };
 
@@ -302,6 +303,7 @@ const handleApprove = (action) => {
           message: msg || '操作成功!',
         });
         handleClose();
+        store.dispatch('SET_NOTICE_COUNT', store.getters.noticeCount - 1);
         getTableList();
       } catch (error) {}
     } else {

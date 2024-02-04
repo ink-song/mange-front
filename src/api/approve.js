@@ -26,3 +26,12 @@ export function leaveApproveApi(data) {
     data,
   });
 }
+
+// 获取审批数量
+
+export function getApproveCountApi() {
+  return request({
+    url: '/leave/count',
+    method: 'get',
+  });
+}
