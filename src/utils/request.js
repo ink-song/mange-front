@@ -85,6 +85,7 @@ function request(options) {
     return request({
       url,
       data,
+      isMock: true,
       method: item,
       ...options,
     });

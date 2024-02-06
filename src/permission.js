@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
   const userInfo = getStorage('userInfo');
   document.title = to.meta.title || 'you are the Best !';
   // 1.判断是否有token
-  if (Object.keys(userInfo).length && userInfo.token) {
+  if (Object.keys(userInfo)?.length && userInfo.token) {
     // 2. 判断是否是登录页
     if (to.path === '/login') {
       next('/');
