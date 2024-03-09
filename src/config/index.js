@@ -12,7 +12,8 @@
 const env = process.env.NODE_ENV || 'prod';
 const EnvConfig = {
   development: {
-    baseApi: '/api',
+    baseApi:
+      'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
     mockApi:
       'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
   },
