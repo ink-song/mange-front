@@ -12,19 +12,17 @@
 const env = process.env.NODE_ENV || 'prod';
 const EnvConfig = {
   development: {
-    baseApi:
-      'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
+    baseApi: '/api',
     mockApi:
       'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
   },
   test: {
-    baseApi: '//test.futurefe.com/api',
+    baseApi: '/api',
     mockApi:
       'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api/users/getPermissionList',
   },
   prod: {
-    baseApi:
-      'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
+    baseApi: '/api',
     mockApi:
       'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
   },
