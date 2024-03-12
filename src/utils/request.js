@@ -14,7 +14,8 @@ import { getStorage } from './storage';
 import router from '../router';
 import store from '../store';
 const service = axios.create({
-  baseURL: config.baseApi,
+  // baseURL: config.baseApi,
+  baseURL: 'localhost:3000/api',
   timeout: 80000,
 });
 
