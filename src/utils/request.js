@@ -13,9 +13,10 @@ import config from '@/config/index';
 import { getStorage } from './storage';
 import router from '../router';
 import store from '../store';
+console.log('config.baseApi', config.baseApi);
 const service = axios.create({
-  // baseURL: config.baseApi,
-  baseURL: 'localhost:3000/api',
+  baseURL: config.baseApi,
+  // baseURL: 'http://localhost:3001/api',
   timeout: 80000,
 });
 
@@ -74,8 +75,11 @@ function request(options) {
     isMock = options.mock;
   }
   if (config.env === 'prod') {
+    console.log(service.defaults.baseURL, 'config.baseApi', config.baseApi);
     service.defaults.baseURL = config.baseApi;
   } else {
+    console.log('options.mock', config.baseApi);
+
     service.defaults.baseURL = isMock ? config.mockApi : config.baseApi;
   }
   return service(options);

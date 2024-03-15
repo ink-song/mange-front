@@ -21,7 +21,7 @@ const EnvConfig = {
     mockApi:
       'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api/users/getPermissionList',
   },
-  prod: {
+  production: {
     baseApi: '/api',
     mockApi:
       'https://www.fastmock.site/mock/90ea6c3628a1622870e9dc491416df04/api',
